@@ -259,11 +259,28 @@ impl<const N: usize> ANNIndex<N> {
 //     }
 // }
 
+fn linear_search<const DIM: usize>(
+    query: &Vector<DIM>,
+    vectors: &[Vector<DIM>],
+    words: &[String],
+    k: usize,
+) -> Vec<(String, f32)> {
+    let mut results: Vec<(String, f32)> = vectors
+        .iter()
+        .enumerate()
+        .map(|(i, v)| (words[i].clone(), v.sq_euc_dis(query)))
+        .collect();
+    results.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap());
+    results.truncate(k);
+    results
+}
+
 fn main() -> std::io::Result<()> {
     const DIM: usize = 300;
-    const NUM_VECTORS: usize = 100000;
+    const NUM_VECTORS: usize = 50000;
     const NUM_TREES: i32 = 3;
     const MAX_SIZE: i32 = 15;
+    const K: usize = 20;
 
     println!("Reading vectors from file...");
     let file = File::open("/Users/dhruv/CODE/EXA_code_demo/wiki-news-300d-1M.vec")?;
@@ -317,16 +334,44 @@ fn main() -> std::io::Result<()> {
         vectors[0]
     });
 
-    println!("Searching for nearest neighbors to 'river'...");
+    println!("\nPerforming approximate nearest neighbor search...");
     let start = Instant::now();
-    let results = index.search_approximate(query_vector, 20);
-    let search_time = start.elapsed();
+    let ann_results = index.search_approximate(query_vector, K as i32);
+    let ann_time = start.elapsed();
 
-    println!("Search completed in {:?}", search_time);
-    println!("Nearest neighbors:");
-    for (id, distance) in results {
-        println!("Word: {}, Distance: {}", words[id as usize], distance);
+    println!("Approximate search completed in {:?}", ann_time);
+    println!("Approximate nearest neighbors:");
+    for (id, distance) in &ann_results {
+        println!("Word: {}, Distance: {}", words[*id as usize], distance);
     }
+
+    println!("\nPerforming linear search...");
+    let start = Instant::now();
+    let linear_results = linear_search(&query_vector, &vectors, &words, K);
+    let linear_time = start.elapsed();
+
+    println!("Linear search completed in {:?}", linear_time);
+    println!("Linear search nearest neighbors:");
+    for (word, distance) in &linear_results {
+        println!("Word: {}, Distance: {}", word, distance);
+    }
+
+    println!("\nComparison:");
+    println!("Approximate search time: {:?}", ann_time);
+    println!("Linear search time: {:?}", linear_time);
+    println!(
+        "Speedup factor: {:.2}x",
+        linear_time.as_secs_f64() / ann_time.as_secs_f64()
+    );
+
+    // Calculate recall
+    let ann_words: HashSet<_> = ann_results
+        .iter()
+        .map(|(id, _)| &words[*id as usize])
+        .collect();
+    let linear_words: HashSet<_> = linear_results.iter().map(|(word, _)| word).collect();
+    let recall = ann_words.intersection(&linear_words).count() as f64 / K as f64;
+    println!("Recall: {:.2}", recall);
 
     Ok(())
 }
