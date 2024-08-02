@@ -1,0 +1,422 @@
+{
+  "case1": {
+    "NUM_TREES": 1,
+    "MAX_SIZE": 5,
+    "Search_Time": "267.625µs",
+    "Speedup": "26.64x",
+    "Recall": 0.05
+  },
+  "case2": {
+    "NUM_TREES": 1,
+    "MAX_SIZE": 10,
+    "Search_Time": "229.875µs",
+    "Speedup": "31.01x",
+    "Recall": 0.10
+  },
+  "case3": {
+    "NUM_TREES": 1,
+    "MAX_SIZE": 15,
+    "Search_Time": "214.334µs",
+    "Speedup": "33.26x",
+    "Recall": 0.10
+  },
+  "case4": {
+    "NUM_TREES": 1,
+    "MAX_SIZE": 20,
+    "Search_Time": "263.209µs",
+    "Speedup": "27.08x",
+    "Recall": 0.20
+  },
+  "case5": {
+    "NUM_TREES": 1,
+    "MAX_SIZE": 30,
+    "Search_Time": "231.25µs",
+    "Speedup": "30.83x",
+    "Recall": 0.10
+  },
+  "case6": {
+    "NUM_TREES": 1,
+    "MAX_SIZE": 40,
+    "Search_Time": "203.042µs",
+    "Speedup": "35.11x",
+    "Recall": 0.05
+  },
+  "case7": {
+    "NUM_TREES": 2,
+    "MAX_SIZE": 5,
+    "Search_Time": "560.75µs",
+    "Speedup": "12.71x",
+    "Recall": 0.00
+  },
+  "case8": {
+    "NUM_TREES": 2,
+    "MAX_SIZE": 10,
+    "Search_Time": "371.041µs",
+    "Speedup": "19.21x",
+    "Recall": 0.00
+  },
+  "case9": {
+    "NUM_TREES": 2,
+    "MAX_SIZE": 15,
+    "Search_Time": "421.5µs",
+    "Speedup": "16.91x",
+    "Recall": 0.15
+  },
+  "case10": {
+    "NUM_TREES": 2,
+    "MAX_SIZE": 20,
+    "Search_Time": "512.916µs",
+    "Speedup": "13.90x",
+    "Recall": 0.25
+  },
+  "case11": {
+    "NUM_TREES": 2,
+    "MAX_SIZE": 30,
+    "Search_Time": "518.75µs",
+    "Speedup": "13.74x",
+    "Recall": 0.30
+  },
+  "case12": {
+    "NUM_TREES": 2,
+    "MAX_SIZE": 40,
+    "Search_Time": "442.208µs",
+    "Speedup": "16.12x",
+    "Recall": 0.15
+  },
+  "case13": {
+    "NUM_TREES": 3,
+    "MAX_SIZE": 5,
+    "Search_Time": "802.958µs",
+    "Speedup": "8.88x",
+    "Recall": 0.20
+  },
+  "case14": {
+    "NUM_TREES": 3,
+    "MAX_SIZE": 10,
+    "Search_Time": "628.75µs",
+    "Speedup": "11.34x",
+    "Recall": 0.20
+  },
+  "case15": {
+    "NUM_TREES": 3,
+    "MAX_SIZE": 15,
+    "Search_Time": "651.875µs",
+    "Speedup": "10.94x",
+    "Recall": 0.25
+  },
+  "case16": {
+    "NUM_TREES": 3,
+    "MAX_SIZE": 20,
+    "Search_Time": "681.666µs",
+    "Speedup": "10.46x",
+    "Recall": 0.10
+  },
+  "case17": {
+    "NUM_TREES": 3,
+    "MAX_SIZE": 30,
+    "Search_Time": "598µs",
+    "Speedup": "11.92x",
+    "Recall": 0.05
+  },
+  "case18": {
+    "NUM_TREES": 3,
+    "MAX_SIZE": 40,
+    "Search_Time": "548.542µs",
+    "Speedup": "13.00x",
+    "Recall": 0.40
+  },
+  "case19": {
+    "NUM_TREES": 4,
+    "MAX_SIZE": 5,
+    "Search_Time": "1.099458ms",
+    "Speedup": "6.48x",
+    "Recall": 0.40
+  },
+  "case20": {
+    "NUM_TREES": 4,
+    "MAX_SIZE": 10,
+    "Search_Time": "1.022375ms",
+    "Speedup": "6.97x",
+    "Recall": 0.35
+  },
+  "case21": {
+    "NUM_TREES": 4,
+    "MAX_SIZE": 15,
+    "Search_Time": "875.375µs",
+    "Speedup": "8.14x",
+    "Recall": 0.45
+  },
+  "case22": {
+    "NUM_TREES": 4,
+    "MAX_SIZE": 20,
+    "Search_Time": "903.75µs",
+    "Speedup": "7.89x",
+    "Recall": 0.25
+  },
+  "case23": {
+    "NUM_TREES": 4,
+    "MAX_SIZE": 30,
+    "Search_Time": "1.033708ms",
+    "Speedup": "6.90x",
+    "Recall": 0.55
+  },
+  "case24": {
+    "NUM_TREES": 4,
+    "MAX_SIZE": 40,
+    "Search_Time": "759.5µs",
+    "Speedup": "9.39x",
+    "Recall": 0.45
+  },
+  "case25": {
+    "NUM_TREES": 5,
+    "MAX_SIZE": 5,
+    "Search_Time": "1.396667ms",
+    "Speedup": "5.10x",
+    "Recall": 0.55
+  },
+  "case26": {
+    "NUM_TREES": 5,
+    "MAX_SIZE": 10,
+    "Search_Time": "1.021208ms",
+    "Speedup": "6.98x",
+    "Recall": 0.15
+  },
+  "case27": {
+    "NUM_TREES": 5,
+    "MAX_SIZE": 15,
+    "Search_Time": "1.054125ms",
+    "Speedup": "6.76x",
+    "Recall": 0.40
+  },
+  "case28": {
+    "NUM_TREES": 5,
+    "MAX_SIZE": 20,
+    "Search_Time": "1.166834ms",
+    "Speedup": "6.11x",
+    "Recall": 0.55
+  },
+  "case29": {
+    "NUM_TREES": 5,
+    "MAX_SIZE": 30,
+    "Search_Time": "1.087208ms",
+    "Speedup": "6.56x",
+    "Recall": 0.60
+  },
+  "case30": {
+    "NUM_TREES": 5,
+    "MAX_SIZE": 40,
+    "Search_Time": "1.030708ms",
+    "Speedup": "6.92x",
+    "Recall": 0.35
+  },
+  "case31": {
+    "NUM_TREES": 6,
+    "MAX_SIZE": 5,
+    "Search_Time": "1.642375ms",
+    "Speedup": "4.34x",
+    "Recall": 0.35
+  },
+  "case32": {
+    "NUM_TREES": 6,
+    "MAX_SIZE": 10,
+    "Search_Time": "1.342125ms",
+    "Speedup": "5.31x",
+    "Recall": 0.65
+  },
+  "case33": {
+    "NUM_TREES": 6,
+    "MAX_SIZE": 15,
+    "Search_Time": "1.393ms",
+    "Speedup": "5.12x",
+    "Recall": 0.60
+  },
+  "case34": {
+    "NUM_TREES": 6,
+    "MAX_SIZE": 20,
+    "Search_Time": "1.196417ms",
+    "Speedup": "5.96x",
+    "Recall": 0.35
+  },
+  "case35": {
+    "NUM_TREES": 6,
+    "MAX_SIZE": 30,
+    "Search_Time": "1.231416ms",
+    "Speedup": "5.79x",
+    "Recall": 0.30
+  },
+  "case36": {
+    "NUM_TREES": 6,
+    "MAX_SIZE": 40,
+    "Search_Time": "1.243083ms",
+    "Speedup": "5.73x",
+    "Recall": 0.30
+  },
+  "case37": {
+    "NUM_TREES": 7,
+    "MAX_SIZE": 5,
+    "Search_Time": "1.858709ms",
+    "Speedup": "3.84x",
+    "Recall": 0.60
+  },
+  "case38": {
+    "NUM_TREES": 7,
+    "MAX_SIZE": 10,
+    "Search_Time": "1.639167ms",
+    "Speedup": "4.35x",
+    "Recall": 0.45
+  },
+  "case39": {
+    "NUM_TREES": 7,
+    "MAX_SIZE": 15,
+    "Search_Time": "1.43975ms",
+    "Speedup": "4.95x",
+    "Recall": 0.55
+  },
+  "case40": {
+    "NUM_TREES": 7,
+    "MAX_SIZE": 20,
+    "Search_Time": "1.479209ms",
+    "Speedup": "4.82x",
+    "Recall": 0.25
+  },
+  "case41": {
+    "NUM_TREES": 7,
+    "MAX_SIZE": 30,
+    "Search_Time": "1.463542ms",
+    "Speedup": "4.87x",
+    "Recall": 0.35
+  },
+  "case42": {
+    "NUM_TREES": 7,
+    "MAX_SIZE": 40,
+    "Search_Time": "1.399667ms",
+    "Speedup": "5.09x",
+    "Recall": 0.55
+  },
+  "case43": {
+    "NUM_TREES": 8,
+    "MAX_SIZE": 5,
+    "Search_Time": "2.039375ms",
+    "Speedup": "3.50x",
+    "Recall": 0.55
+  },
+  "case44": {
+    "NUM_TREES": 8,
+    "MAX_SIZE": 10,
+    "Search_Time": "1.779084ms",
+    "Speedup": "4.01x",
+    "Recall": 0.50
+  },
+  "case45": {
+    "NUM_TREES": 8,
+    "MAX_SIZE": 15,
+    "Search_Time": "1.562416ms",
+    "Speedup": "4.56x",
+    "Recall": 0.65
+  },
+  "case46": {
+    "NUM_TREES": 8,
+    "MAX_SIZE": 20,
+    "Search_Time": "1.6175ms",
+    "Speedup": "4.41x",
+    "Recall": 0.70
+  },
+  "case47": {
+    "NUM_TREES": 8,
+    "MAX_SIZE": 30,
+    "Search_Time": "1.693542ms",
+    "Speedup": "4.21x",
+    "Recall": 0.55
+  },
+  "case48": {
+    "NUM_TREES": 8,
+    "MAX_SIZE": 40,
+    "Search_Time": "1.463208ms",
+    "Speedup": "4.87x",
+    "Recall": 0.50
+  },
+  "case49": {
+    "NUM_TREES": 9,
+    "MAX_SIZE": 5,
+    "Search_Time": "2.180625ms",
+    "Speedup": "3.27x",
+    "Recall": 0.60
+  },
+  "case50": {
+    "NUM_TREES": 9,
+    "MAX_SIZE": 10,
+    "Search_Time": "2.019875ms",
+    "Speedup": "3.53x",
+    "Recall": 0.50
+  },
+  "case51": {
+    "NUM_TREES": 9,
+    "MAX_SIZE": 15,
+    "Search_Time": "1.959667ms",
+    "Speedup": "3.64x",
+    "Recall": 0.60
+  },
+  "case52": {
+    "NUM_TREES": 9,
+    "MAX_SIZE": 20,
+    "Search_Time": "1.819625ms",
+    "Speedup": "3.92x",
+    "Recall": 0.90
+  },
+  "case53": {
+    "NUM_TREES": 9,
+    "MAX_SIZE": 30,
+    "Search_Time": "1.608959ms",
+    "Speedup": "4.43x",
+    "Recall": 0.60
+  },
+  "case54": {
+    "NUM_TREES": 9,
+    "MAX_SIZE": 40,
+    "Search_Time": "1.83625ms",
+    "Speedup": "3.88x",
+    "Recall": 0.70
+  },
+  "case55": {
+    "NUM_TREES": 10,
+    "MAX_SIZE": 5,
+    "Search_Time": "2.474542ms",
+    "Speedup": "2.88x",
+    "Recall": 0.55
+  },
+  "case56": {
+    "NUM_TREES": 10,
+    "MAX_SIZE": 10,
+    "Search_Time": "2.07275ms",
+    "Speedup": "3.44x",
+    "Recall": 0.50
+  },
+  "case57": {
+    "NUM_TREES": 10,
+    "MAX_SIZE": 15,
+    "Search_Time": "2.099708ms",
+    "Speedup": "3.39x",
+    "Recall": 0.50
+  },
+  "case58": {
+    "NUM_TREES": 10,
+    "MAX_SIZE": 20,
+    "Search_Time": "1.953416ms",
+    "Speedup": "3.65x",
+    "Recall": 0.80
+  },
+  "case59": {
+    "NUM_TREES": 10,
+    "MAX_SIZE": 30,
+    "Search_Time": "1.949625ms",
+    "Speedup": "3.66x",
+    "Recall": 0.70
+  },
+  "case60": {
+    "NUM_TREES": 10,
+    "MAX_SIZE": 40,
+    "Search_Time": "1.584459ms",
+    "Speedup": "4.50x",
+    "Recall": 0.55
+  }
+}
