@@ -3,6 +3,9 @@ use rand::seq::SliceRandom;
 use rand::Rng;
 use std::cmp::min;
 use std::collections::HashSet;
+use std::fs::File;
+use std::io::{BufRead, BufReader};
+use std::time::Instant;
 
 #[derive(Eq, PartialEq, Hash)]
 pub struct HashKey<const N: usize>([u32; N]);
@@ -222,36 +225,108 @@ impl<const N: usize> ANNIndex<N> {
     }
 }
 
-fn main() {
-    const DIM: usize = 3; // Let's use 3D vectors for simplicity
-    const NUM_VECTORS: usize = 1000;
+// fn main() {
+//     const DIM: usize = 3; // Let's use 3D vectors for simplicity
+//     const NUM_VECTORS: usize = 1000;
+//     const NUM_TREES: i32 = 3;
+//     const MAX_SIZE: i32 = 10;
+
+//     // Generate random vectors
+//     let mut rng = rand::thread_rng();
+//     let vectors: Vec<Vector<DIM>> = (0..NUM_VECTORS)
+//         .map(|_| {
+//             let coords: [f32; DIM] = std::array::from_fn(|_| rng.gen());
+//             Vector(coords)
+//         })
+//         .collect();
+
+//     // Generate random IDs
+//     let ids: Vec<i32> = (0..NUM_VECTORS as i32).collect();
+
+//     // Build the index
+//     let index = ANNIndex::<DIM>::build_index(NUM_TREES, MAX_SIZE, &vectors, &ids);
+
+//     // Generate a random query vector
+//     let query_vector = Vector([rng.gen(), rng.gen(), rng.gen()]);
+
+//     // Search for nearest neighbors
+//     let results = index.search_approximate(query_vector, 5);
+
+//     println!("Query vector: {:?}", query_vector.0);
+//     println!("Nearest neighbors:");
+//     for (id, distance) in results {
+//         println!("ID: {}, Distance: {}", id, distance);
+//     }
+// }
+
+fn main() -> std::io::Result<()> {
+    const DIM: usize = 300;
+    const NUM_VECTORS: usize = 100000;
     const NUM_TREES: i32 = 3;
-    const MAX_SIZE: i32 = 10;
+    const MAX_SIZE: i32 = 15;
 
-    // Generate random vectors
-    let mut rng = rand::thread_rng();
-    let vectors: Vec<Vector<DIM>> = (0..NUM_VECTORS)
-        .map(|_| {
-            let coords: [f32; DIM] = std::array::from_fn(|_| rng.gen());
-            Vector(coords)
-        })
-        .collect();
+    println!("Reading vectors from file...");
+    let file = File::open("/Users/dhruv/CODE/EXA_code_demo/wiki-news-300d-1M.vec")?;
+    let reader = BufReader::new(file);
+    let mut lines = reader.lines();
 
-    // Generate random IDs
-    let ids: Vec<i32> = (0..NUM_VECTORS as i32).collect();
+    // Skip the header
+    lines.next();
 
-    // Build the index
-    let index = ANNIndex::<DIM>::build_index(NUM_TREES, MAX_SIZE, &vectors, &ids);
+    let mut vectors = Vec::new();
+    let mut words = Vec::new();
+    let mut river_vector = None;
 
-    // Generate a random query vector
-    let query_vector = Vector([rng.gen(), rng.gen(), rng.gen()]);
+    for (i, line) in lines.enumerate().take(NUM_VECTORS) {
+        let line = line?;
+        let mut parts = line.split_whitespace();
+        let word = parts.next().unwrap().to_string();
+        let vector: [f32; DIM] = parts
+            .map(|s| s.parse().unwrap())
+            .collect::<Vec<f32>>()
+            .try_into()
+            .unwrap();
 
-    // Search for nearest neighbors
-    let results = index.search_approximate(query_vector, 5);
+        let vec = Vector(vector);
 
-    println!("Query vector: {:?}", query_vector.0);
+        if word == "river" {
+            river_vector = Some(vec);
+        }
+
+        vectors.push(vec);
+        words.push(word);
+
+        if i % 1000 == 0 {
+            println!("Processed {} vectors", i);
+        }
+    }
+
+    println!("Building index...");
+    let start = Instant::now();
+    let index = ANNIndex::<DIM>::build_index(
+        NUM_TREES,
+        MAX_SIZE,
+        &vectors,
+        &(0..vectors.len() as i32).collect(),
+    );
+    let build_time = start.elapsed();
+    println!("Index built in {:?}", build_time);
+
+    let query_vector = river_vector.unwrap_or_else(|| {
+        println!("'river' not found in the first 10,000 words. Using a random vector.");
+        vectors[0]
+    });
+
+    println!("Searching for nearest neighbors to 'river'...");
+    let start = Instant::now();
+    let results = index.search_approximate(query_vector, 20);
+    let search_time = start.elapsed();
+
+    println!("Search completed in {:?}", search_time);
     println!("Nearest neighbors:");
     for (id, distance) in results {
-        println!("ID: {}, Distance: {}", id, distance);
+        println!("Word: {}, Distance: {}", words[id as usize], distance);
     }
+
+    Ok(())
 }
