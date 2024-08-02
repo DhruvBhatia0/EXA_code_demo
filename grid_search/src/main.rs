@@ -275,11 +275,182 @@ fn linear_search<const DIM: usize>(
     results
 }
 
+fn calculate_recall<const DIM: usize>(
+    ann_results: &[(i32, f32)],
+    linear_results: &[(String, f32)],
+    words: &[String],
+    k: usize,
+) -> f64 {
+    let ann_words: HashSet<_> = ann_results
+        .iter()
+        .map(|(id, _)| &words[*id as usize])
+        .collect();
+    let linear_words: HashSet<_> = linear_results.iter().map(|(word, _)| word).collect();
+    ann_words.intersection(&linear_words).count() as f64 / k as f64
+}
+
+fn build_index_and_search<const DIM: usize>(
+    num_trees: i32,
+    max_size: i32,
+    vectors: &[Vector<DIM>],
+    words: &[String],
+    query_vector: &Vector<DIM>,
+    k: usize,
+) -> (Vec<(i32, f32)>, std::time::Duration) {
+    let index = ANNIndex::<DIM>::build_index(
+        num_trees,
+        max_size,
+        &vectors.to_vec(), // Convert slice to Vec
+        &(0..vectors.len() as i32).collect(),
+    );
+
+    let start = Instant::now();
+    let ann_results = index.search_approximate(*query_vector, k as i32);
+    let ann_time = start.elapsed();
+
+    (ann_results, ann_time)
+}
+
+// Update the grid_search function
+fn grid_search<const DIM: usize>(
+    vectors: &[Vector<DIM>],
+    words: &[String],
+    query_vector: &Vector<DIM>,
+    k: usize,
+) {
+    let num_trees_range = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    let max_size_range = [5, 10, 15, 20, 30, 40];
+
+    // Perform linear search once
+    let linear_results = linear_search(query_vector, vectors, words, k);
+    let linear_start = Instant::now();
+    linear_search(query_vector, vectors, words, k);
+    let linear_time = linear_start.elapsed();
+
+    println!("Grid Search Results:");
+    println!("-------------------");
+    println!("NUM_TREES | MAX_SIZE | Search Time | Speedup | Recall");
+    println!("-------------------");
+
+    for &num_trees in &num_trees_range {
+        for &max_size in &max_size_range {
+            let (ann_results, ann_time) =
+                build_index_and_search(num_trees, max_size, vectors, words, query_vector, k);
+            let recall = calculate_recall::<DIM>(&ann_results, &linear_results, words, k); // Add type parameter
+            let speedup = linear_time.as_secs_f64() / ann_time.as_secs_f64();
+
+            println!(
+                "{:9} | {:8} | {:11?} | {:7.2}x | {:.2}",
+                num_trees, max_size, ann_time, speedup, recall
+            );
+        }
+    }
+}
+
+// fn main() -> std::io::Result<()> {
+//     const DIM: usize = 300;
+//     const NUM_VECTORS: usize = 25000;
+//     // const NUM_TREES: i32 = 3;
+//     // const MAX_SIZE: i32 = 15;
+//     const K: usize = 20;
+
+//     println!("Reading vectors from file...");
+//     let file = File::open("/Users/dhruv/CODE/EXA_code_demo/wiki-news-300d-1M.vec")?;
+//     let reader = BufReader::new(file);
+//     let mut lines = reader.lines();
+
+//     // Skip the header
+//     lines.next();
+
+//     let mut vectors = Vec::new();
+//     let mut words = Vec::new();
+//     let mut river_vector = None;
+
+//     for (i, line) in lines.enumerate().take(NUM_VECTORS) {
+//         let line = line?;
+//         let mut parts = line.split_whitespace();
+//         let word = parts.next().unwrap().to_string();
+//         let vector: [f32; DIM] = parts
+//             .map(|s| s.parse().unwrap())
+//             .collect::<Vec<f32>>()
+//             .try_into()
+//             .unwrap();
+
+//         let vec = Vector(vector);
+
+//         if word == "river" {
+//             river_vector = Some(vec);
+//         }
+
+//         vectors.push(vec);
+//         words.push(word);
+
+//         if i % 1000 == 0 {
+//             println!("Processed {} vectors", i);
+//         }
+//     }
+
+//     println!("Building index...");
+//     let start = Instant::now();
+//     let index = ANNIndex::<DIM>::build_index(
+//         NUM_TREES,
+//         MAX_SIZE,
+//         &vectors,
+//         &(0..vectors.len() as i32).collect(),
+//     );
+//     let build_time = start.elapsed();
+//     println!("Index built in {:?}", build_time);
+
+//     let query_vector = river_vector.unwrap_or_else(|| {
+//         println!("'river' not found in the first 10,000 words. Using a random vector.");
+//         vectors[0]
+//     });
+
+//     println!("\nPerforming approximate nearest neighbor search...");
+//     let start = Instant::now();
+//     let ann_results = index.search_approximate(query_vector, K as i32);
+//     let ann_time = start.elapsed();
+
+//     println!("Approximate search completed in {:?}", ann_time);
+//     println!("Approximate nearest neighbors:");
+//     for (id, distance) in &ann_results {
+//         println!("Word: {}, Distance: {}", words[*id as usize], distance);
+//     }
+
+//     println!("\nPerforming linear search...");
+//     let start = Instant::now();
+//     let linear_results = linear_search(&query_vector, &vectors, &words, K);
+//     let linear_time = start.elapsed();
+
+//     println!("Linear search completed in {:?}", linear_time);
+//     println!("Linear search nearest neighbors:");
+//     for (word, distance) in &linear_results {
+//         println!("Word: {}, Distance: {}", word, distance);
+//     }
+
+//     println!("\nComparison:");
+//     println!("Approximate search time: {:?}", ann_time);
+//     println!("Linear search time: {:?}", linear_time);
+//     println!(
+//         "Speedup factor: {:.2}x",
+//         linear_time.as_secs_f64() / ann_time.as_secs_f64()
+//     );
+
+//     // Calculate recall
+//     let ann_words: HashSet<_> = ann_results
+//         .iter()
+//         .map(|(id, _)| &words[*id as usize])
+//         .collect();
+//     let linear_words: HashSet<_> = linear_results.iter().map(|(word, _)| word).collect();
+//     let recall = ann_words.intersection(&linear_words).count() as f64 / K as f64;
+//     println!("Recall: {:.2}", recall);
+
+//     Ok(())
+// }
+
 fn main() -> std::io::Result<()> {
     const DIM: usize = 300;
-    const NUM_VECTORS: usize = 50000;
-    const NUM_TREES: i32 = 3;
-    const MAX_SIZE: i32 = 15;
+    const NUM_VECTORS: usize = 1000;
     const K: usize = 20;
 
     println!("Reading vectors from file...");
@@ -318,60 +489,23 @@ fn main() -> std::io::Result<()> {
         }
     }
 
-    println!("Building index...");
-    let start = Instant::now();
-    let index = ANNIndex::<DIM>::build_index(
-        NUM_TREES,
-        MAX_SIZE,
-        &vectors,
-        &(0..vectors.len() as i32).collect(),
-    );
-    let build_time = start.elapsed();
-    println!("Index built in {:?}", build_time);
+    println!("Finished reading vectors.");
 
     let query_vector = river_vector.unwrap_or_else(|| {
-        println!("'river' not found in the first 10,000 words. Using a random vector.");
+        println!(
+            "'river' not found in the first {} words. Using a random vector.",
+            NUM_VECTORS
+        );
         vectors[0]
     });
 
-    println!("\nPerforming approximate nearest neighbor search...");
-    let start = Instant::now();
-    let ann_results = index.search_approximate(query_vector, K as i32);
-    let ann_time = start.elapsed();
+    println!("Starting grid search...");
+    let start_time = Instant::now();
 
-    println!("Approximate search completed in {:?}", ann_time);
-    println!("Approximate nearest neighbors:");
-    for (id, distance) in &ann_results {
-        println!("Word: {}, Distance: {}", words[*id as usize], distance);
-    }
+    grid_search::<DIM>(&vectors, &words, &query_vector, K);
 
-    println!("\nPerforming linear search...");
-    let start = Instant::now();
-    let linear_results = linear_search(&query_vector, &vectors, &words, K);
-    let linear_time = start.elapsed();
-
-    println!("Linear search completed in {:?}", linear_time);
-    println!("Linear search nearest neighbors:");
-    for (word, distance) in &linear_results {
-        println!("Word: {}, Distance: {}", word, distance);
-    }
-
-    println!("\nComparison:");
-    println!("Approximate search time: {:?}", ann_time);
-    println!("Linear search time: {:?}", linear_time);
-    println!(
-        "Speedup factor: {:.2}x",
-        linear_time.as_secs_f64() / ann_time.as_secs_f64()
-    );
-
-    // Calculate recall
-    let ann_words: HashSet<_> = ann_results
-        .iter()
-        .map(|(id, _)| &words[*id as usize])
-        .collect();
-    let linear_words: HashSet<_> = linear_results.iter().map(|(word, _)| word).collect();
-    let recall = ann_words.intersection(&linear_words).count() as f64 / K as f64;
-    println!("Recall: {:.2}", recall);
+    let total_time = start_time.elapsed();
+    println!("Grid search completed in {:?}", total_time);
 
     Ok(())
 }
