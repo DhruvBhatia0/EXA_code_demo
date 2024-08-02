@@ -17,7 +17,15 @@ impl<const N: usize> Vector<N> {
     }
 
     pub fn subtract(&self, vector: &Vector<N>) -> Vector<N> {
-        return Vector::<N>(self.0.zip(victor.0).map(|a, b| b - a));
+        let result: [f32; N] = self
+            .0
+            .iter()
+            .zip(vector.0)
+            .map(|(a, b)| a - b)
+            .collect::<Vec<_>>()
+            .try_into()
+            .unwrap();
+        return Vector(result);
     }
 }
 
